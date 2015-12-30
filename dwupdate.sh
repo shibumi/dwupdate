@@ -32,6 +32,7 @@
 
 wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
 wifi_name=$(netctl list | grep "*" | awk '{ print $2 }')
+wifi_bitrate=$(iwconfig wlp2s0| grep -o "[0-9]* Mb/s")
 ether_state=$(ip addr | grep 'enp8s0' | head -1 | awk '{ print $9 }')
 bat_state=$(cat /sys/class/power_supply/BAT1/status)
 bat_perc=$(cat /sys/class/power_supply/BAT1/capacity)
@@ -47,7 +48,7 @@ output=""
 
 if [[ $wifi_state == "UP" ]]
 then
-	output+="W: Up ($wifi_name)"
+	output+="W: ($wifi_name:$wifi_bitrate)"
 
 else 
 	output+="W: Down"
@@ -64,14 +65,23 @@ fi
 
 output+="|"
 
-if [[ $bat_state == "Charging" ]]
+if [[ $bat_state == "Discharging" ]]
 then
-	output+="B: ^ $bat_perc"
+	output+="B: v $bat_perc"
 elif [[ $bat_state == "Full" ]]
 then
 	output+="B: = $bat_perc"
 else
-	output+="B: v $bat_perc"
+	output+="B: ^ $bat_perc"
+fi
+
+output+="|"
+
+if [[ $sound_state == "[on]" ]]
+then
+	output+="Sound: $sound_perc"
+else
+	output+="Sound: $sound_perc"
 fi
 
 output+="|"
