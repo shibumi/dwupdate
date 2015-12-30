@@ -43,7 +43,7 @@ ram_capacity=$(free -h | grep Mem | awk '{ print $2 }')
 ram_perc=$(free | grep Mem | awk '{print $3/$2 * 100.0}' | rev | cut -c 6- | rev)
 cpu_usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END{print usage}')
 date=$(date -u -I)
-datetime=$(date -u '+%I:%M')
+datetime=$(date -u '+%I:%M %p')
 output=""
 
 if [[ $wifi_state == "UP" ]]
@@ -89,7 +89,7 @@ output+="|"
 if [[ $ram_perc -ge 80 ]]
 then
 	output+="Ram: $ram_usage / $ram_capacity"
-elif [[ $ram_perc < 80 ]] && [[ $ram_perc -ge 50 ]]
+elif [[ $ram_perc -lt 80 ]] && [[ $ram_perc -ge 50 ]]
 then
 	output+="Ram: $ram_usage / $ram_capacity"
 else
