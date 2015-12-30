@@ -31,17 +31,59 @@
 
 
 wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
+wifi_name=$(netctl list | grep "*" | awk '{ print $2 }')
 ether_state=$(ip addr | grep 'enp8s0' | head -1 | awk '{ print $9 }')
 bat_state=$(cat /sys/class/power_supply/BAT1/status)
 bat_perc=$(cat /sys/class/power_supply/BAT1/capacity)
-wifi_name=$(netctl list | grep "*" | awk '{ print $2 }')
-ram_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
+ram_usage=$(free -h | grep Mem | awk '{print $3 }') 
 ram_capacity=$(free -h | grep Mem | awk '{ print $2 }')
-cpu_usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END
-{print usage}')
+ram_perc=$(free | grep Mem | awk '{print $3/$2 * 100.0}' | rev | cut -c 6- | rev)
+cpu_usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END{print usage}')
 date=$(date -u -I)
 datetime=$(date -u '+%I:%M')
+output=""
 
+if [[ $wifi_state == "UP" ]]
+then
+	output+="W: Up ($wifi_name)"
 
+else 
+	output+="W: Down"
+fi
 
+output+="|"  
 
+if [[ $ether_state == "UP" ]]
+then
+	output+="E: Up"
+else
+	output+="E: Down"
+fi
+
+output+="|"
+
+if [[ $bat_state == "Charging" ]]
+then
+	output+="B: ^ $bat_perc"
+elif [[ $bat_state == "Full" ]]
+then
+	output+="B: = $bat_perc"
+else
+	output+="B: v $bat_perc"
+fi
+
+output+="|"
+
+if [[ $ram_perc -ge 80 ]]
+then
+	output+="Ram: $ram_usage / $ram_capacity"
+elif [[ $ram_perc < 80 ]] && [[ $ram_perc -ge 50 ]]
+then
+	output+="Ram: $ram_usage / $ram_capacity"
+else
+	output+="Ram: $ram_usage / $ram_capacity"
+fi
+output+="|"
+
+output+="$date $datetime"
+echo -e $output
