@@ -24,10 +24,10 @@
 # Github: www.github.com/Shibumi
 #
 # 
-# 
+# Usage:
+# bash dwupdate.sh | while read -r; do xsetroot -name "$REPLY"; done &
 #
 # vim:set noet sts=4 sw=4 ts=4 tw=76:
-#
 
 
 wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
