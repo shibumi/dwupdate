@@ -86,9 +86,9 @@ fi
 
 if [[ $sound_state == "[on]" ]]
 then
-	output+="Sound: $sound_perc"
+	output+="S: $sound_perc"
 else
-	output+="Sound: $sound_perc"
+	output+="S: $sound_perc"
 fi
 
 # RAM
