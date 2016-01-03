@@ -71,10 +71,15 @@ output+="|"
 
 if [[ $bat_state == "Discharging" ]]
 then
-	output+="B: v $bat_perc"
-elif [[ $bat_state == "Full" ]]
-then
-	output+="B: = $bat_perc"
+    if [[ $bat_perc -gt 50 ]] && [[ $bat_perc -lt 100 ]]
+    then
+        output+="B: v $bat_perc"
+    elif [[ $bat_perc -gt 20 ]] && [[ $bat_perc -lt 50 ]]
+    then
+        output+="B: v $bat_perc"
+    else
+        output+="B: v $bat_perc"
+    fi
 else
 	output+="B: ^ $bat_perc"
 fi
