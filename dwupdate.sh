@@ -55,7 +55,6 @@ then
 else 
 	output+="W: Down"
 fi
-output+="|"  
 
 # Ethernet
 
@@ -65,7 +64,6 @@ then
 else
 	output+="E: Down"
 fi
-output+="|"
 
 # Battery
 
@@ -83,7 +81,6 @@ then
 else
 	output+="B: ^ $bat_perc"
 fi
-output+="|"
 
 # Sound
 
@@ -93,7 +90,6 @@ then
 else
 	output+="Sound: $sound_perc"
 fi
-output+="|"
 
 # RAM
 
@@ -106,7 +102,6 @@ then
 else
 	output+="RAM: $ram_usage / $ram_capacity"
 fi
-output+="|"
 
 # CPU
 
@@ -119,7 +114,6 @@ then
 else
 	output+="CPU: $cpu_usage%"
 fi
-output+="|"
 
 # Date/Time
 
