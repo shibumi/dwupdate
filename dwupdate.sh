@@ -107,12 +107,12 @@ output+="|"
 
 if [[ $cpu_usage -ge 80 ]]
 then
-	output+="CPU: $cpu_usage"
+	output+="CPU: $cpu_usage%"
 elif [[ $cpu_usage -lt 80 ]] && [[ $cpu_usage -ge 50 ]]
 then
-	output+="CPU: $cpu_usage"
+	output+="CPU: $cpu_usage%"
 else
-	output+="CPU: $cpu_usage"
+	output+="CPU: $cpu_usage%"
 fi
 output+="|"
 
