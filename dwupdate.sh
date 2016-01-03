@@ -92,10 +92,10 @@ output+="|"
 
 # RAM
 
-if [[ $ram_perc -ge 80 ]]
+if [[ $ram_perc -ge 90 ]]
 then
 	output+="RAM: $ram_usage / $ram_capacity"
-elif [[ $ram_perc -lt 80 ]] && [[ $ram_perc -ge 50 ]]
+elif [[ $ram_perc -lt 90 ]] && [[ $ram_perc -ge 50 ]]
 then
 	output+="RAM: $ram_usage / $ram_capacity"
 else
@@ -105,10 +105,10 @@ output+="|"
 
 # CPU
 
-if [[ $cpu_usage -ge 80 ]]
+if [[ $cpu_usage -ge 90 ]]
 then
 	output+="CPU: $cpu_usage%"
-elif [[ $cpu_usage -lt 80 ]] && [[ $cpu_usage -ge 50 ]]
+elif [[ $cpu_usage -lt 90 ]] && [[ $cpu_usage -ge 50 ]]
 then
 	output+="CPU: $cpu_usage%"
 else
