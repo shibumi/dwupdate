@@ -29,7 +29,7 @@
 #
 # vim:set noet sts=4 sw=4 ts=4 tw=76:
 
-
+# Main-Functions
 wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
 wifi_name=$(netctl list | grep "*" | awk '{ print $2 }')
 wifi_bitrate=$(iwconfig wlp2s0| grep -o "[0-9]* Mb/s")
@@ -41,10 +41,12 @@ sound_perc=$(amixer get Master -M | grep -oE "[[:digit:]]*%")
 ram_usage=$(free -h | grep Mem | awk '{print $3 }') 
 ram_capacity=$(free -h | grep Mem | awk '{ print $2 }')
 ram_perc=$(free | grep Mem | awk '{print $3/$2 * 100.0}' | rev | cut -c 6- | rev)
-cpu_usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END{print usage}')
+cpu_usage=$(mpstat 1 1 | grep 'Average' | awk '{ printf "%.0f", 100-$NF }')
 date=$(date -u -I)
 datetime=$(date -u '+%I:%M %p')
 output=""
+
+# Wifi
 
 if [[ $wifi_state == "UP" ]]
 then
@@ -53,8 +55,9 @@ then
 else 
 	output+="W: Down"
 fi
-
 output+="|"  
+
+# Ethernet
 
 if [[ $ether_state == "UP" ]]
 then
@@ -62,8 +65,9 @@ then
 else
 	output+="E: Down"
 fi
-
 output+="|"
+
+# Battery
 
 if [[ $bat_state == "Discharging" ]]
 then
@@ -74,8 +78,9 @@ then
 else
 	output+="B: ^ $bat_perc"
 fi
-
 output+="|"
+
+# Sound
 
 if [[ $sound_state == "[on]" ]]
 then
@@ -83,19 +88,35 @@ then
 else
 	output+="Sound: $sound_perc"
 fi
-
 output+="|"
+
+# RAM
 
 if [[ $ram_perc -ge 80 ]]
 then
-	output+="Ram: $ram_usage / $ram_capacity"
+	output+="RAM: $ram_usage / $ram_capacity"
 elif [[ $ram_perc -lt 80 ]] && [[ $ram_perc -ge 50 ]]
 then
-	output+="Ram: $ram_usage / $ram_capacity"
+	output+="RAM: $ram_usage / $ram_capacity"
 else
-	output+="Ram: $ram_usage / $ram_capacity"
+	output+="RAM: $ram_usage / $ram_capacity"
 fi
 output+="|"
+
+# CPU
+
+if [[ $cpu_usage -ge 80 ]]
+then
+	output+="CPU: $cpu_usage"
+elif [[ $cpu_usage -lt 80 ]] && [[ $cpu_usage -ge 50 ]]
+then
+	output+="CPU: $cpu_usage"
+else
+	output+="CPU: $cpu_usage"
+fi
+output+="|"
+
+# Date/Time
 
 output+="$date $datetime"
 echo -e $output
