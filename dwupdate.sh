@@ -34,6 +34,7 @@ while sleep 1
 do
 
 	# Main-Functions
+	temp=$(sensors | grep "Core 0:" | awk '{ printf "%.0f", $3 }')
 	wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
 	wifi_name=$(netctl list | grep "*" | awk '{ print $2 }')
 	wifi_bitrate=$(iwconfig wlp2s0| grep -o "[0-9]* Mb/s")
@@ -49,6 +50,18 @@ do
 	date=$(date -u -I)
 	datetime=$(date -u '+%I:%M %p')
 	output=""
+
+	# Temperature
+
+	if [[ $temp -ge 45 ]] && [[ $temp -le 49 ]]
+	then
+		output+="T: $temp%"
+	elif [[ $temp -gt 49 ]]
+	then
+		output+="T: $temp%"
+	else
+		output+="T: $temp%"
+	fi
 
 		# Wifi
 
@@ -73,10 +86,10 @@ do
 
 	if [[ $bat_state == "Discharging" ]]
 	then
-		if [[ $bat_perc -gt 50 ]] && [[ $bat_perc -lt 100 ]]
+		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
 		then
 			output+="B: v $bat_perc%"
-		elif [[ $bat_perc -gt 20 ]] && [[ $bat_perc -lt 50 ]]
+		elif [[ $bat_perc -ge 20 ]] && [[ $bat_perc -lt 50 ]]
 		then
 			output+="B: v $bat_perc%"
 		else
