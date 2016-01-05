@@ -25,7 +25,7 @@
 #
 # 
 # Usage:
-# bash dwupdate.sh | while read -r; do xsetroot -name "$REPLY"; done &
+# `dwupdate &`
 #
 # vim:set noet sts=4 sw=4 ts=4 tw=76:
 
@@ -34,6 +34,9 @@ while sleep 1
 do
 
 	# Main-Functions
+	disk_perc=$(df -h | grep "root" | awk '{ printf "%0.f", $5 }')
+	disk_size=$(df -h | grep "root" | awk '{ print $2 }')
+	disk_use=$(df -h | grep "root" | awk '{ print $3 }')
 	temp=$(sensors | grep "Core 0:" | awk '{ printf "%.0f", $3 }')
 	wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
 	wifi_name=$(netctl list | grep "*" | awk '{ print $2 }')
@@ -50,6 +53,19 @@ do
 	date=$(date -u -I)
 	datetime=$(date -u '+%I:%M %p')
 	output=""
+
+	# Disk usage
+	
+	if [[ $disk_perc -ge 90 ]]
+	then
+		output+="D: $disk_use / $disk_size"
+	elif [[ $disk_perc -lt 90 ]] && [[ $disk_perc -ge 70 ]]
+	then
+		output+="D: $disk_use / $disk_size"
+	else
+		output+="D: $disk_use / $disk_size" 
+	fi
+
 
 	# Temperature
 
