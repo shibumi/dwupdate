@@ -117,5 +117,5 @@ fi
 
 # Date/Time
 
-output+="$date $datetime"
+output+="$date $datetime"
 echo -e $output
