@@ -59,7 +59,7 @@ do
 	if [[ $disk_perc -ge 90 ]]
 	then
 		output+="D: $disk_use / $disk_size"
-	elif [[ $disk_perc -lt 90 ]] && [[ $disk_perc -ge 70 ]]
+	elif [[ $disk_perc -ge 70 ]]
 	then
 		output+="D: $disk_use / $disk_size"
 	else
@@ -105,7 +105,7 @@ do
 		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
 		then
 			output+="B: v $bat_perc%"
-		elif [[ $bat_perc -ge 20 ]] && [[ $bat_perc -lt 50 ]]
+		elif [[ $bat_perc -ge 20 ]] 
 		then
 			output+="B: v $bat_perc%"
 		else
@@ -129,7 +129,7 @@ do
 	if [[ $ram_perc -ge 90 ]]
 	then
 		output+="RAM: $ram_usage / $ram_capacity"
-	elif [[ $ram_perc -lt 90 ]] && [[ $ram_perc -ge 50 ]]
+	elif [[ $ram_perc -ge 50 ]]
 	then
 		output+="RAM: $ram_usage / $ram_capacity"
 	else
@@ -141,7 +141,7 @@ do
 	if [[ $cpu_usage -ge 90 ]]
 	then
 		output+="CPU: $cpu_usage%"
-	elif [[ $cpu_usage -lt 90 ]] && [[ $cpu_usage -ge 50 ]]
+	elif [[ $cpu_usage -ge 50 ]]
 	then
 		output+="CPU: $cpu_usage%"
 	else
