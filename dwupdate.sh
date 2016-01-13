@@ -41,7 +41,7 @@ do
 	temp=$(sensors | grep "Core 0:" | awk '{ printf "%.0f", $3 }')
 	wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
 	wifi_name=$(netctl list | awk '/*/{ print $2 }')
-	wifi_bitrate=$(iwconfig wlp2s0| grep -o "[0-9]* Mb/s")
+	wifi_bitrate=$(iwconfig wlp2s0| grep -o "[0-9.]* Mb/s")
 	ether_state=$(ip addr | grep 'enp8s0' | head -1 | awk '{ print $9 }')
 	bat_state=$(cat /sys/class/power_supply/BAT1/status)
 	bat_perc=$(cat /sys/class/power_supply/BAT1/capacity)
