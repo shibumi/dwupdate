@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # dwupdate.sh - statusbar updater with colours via statuscolor
-# 
-# Copyright (c) 2015 by Christian Rebischke 
+#
+# Copyright (c) 2015 by Christian Rebischke
 # <echo Q2hyaXMuUmViaXNjaGtlQGdtYWlsLmNvbQo= | base64 -d>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http: #www.gnu.org/licenses/
 #
-#====================================================================== 
+#======================================================================
 # Author: Christian Rebischke
 # Email : echo Q2hyaXMuUmViaXNjaGtlQGdtYWlsLmNvbQo= | base64 -d
 # Github: www.github.com/Shibumi
 #
-# 
+#
 # Usage:
 # `dwupdate &`
 #
@@ -47,7 +47,7 @@ do
 	bat_perc=$(cat /sys/class/power_supply/BAT1/capacity)
 	sound_state=$(amixer get Master -M | grep -o "\(\[on\]\)\|\(\[off\]\)")
 	sound_perc=$(amixer get Master -M | grep -oE "[[:digit:]]*%")
-	ram_usage=$(free -h | awk '/Mem/{print $3 }') 
+	ram_usage=$(free -h | awk '/Mem/{print $3 }')
 	ram_capacity=$(free -h | awk '/Mem/{ print $2 }')
 	ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
 	cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
@@ -56,7 +56,7 @@ do
 	output=""
 
 	# Disk usage
-	
+
 	if [[ $disk_perc -ge 90 ]]
 	then
 		output+="D: $disk_use / $disk_size"
@@ -64,7 +64,7 @@ do
 	then
 		output+="D: $disk_use / $disk_size"
 	else
-		output+="D: $disk_use / $disk_size" 
+		output+="D: $disk_use / $disk_size"
 	fi
 
 
@@ -86,7 +86,7 @@ do
 	then
 		output+="W: ($wifi_name:$wifi_bitrate)"
 
-	else 
+	else
 		output+="W: Down"
 	fi
 
@@ -106,7 +106,7 @@ do
 		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
 		then
 			output+="B: v $bat_perc%"
-		elif [[ $bat_perc -ge 20 ]] 
+		elif [[ $bat_perc -ge 20 ]]
 		then
 			output+="B: v $bat_perc%"
 		else
