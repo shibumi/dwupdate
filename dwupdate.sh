@@ -30,7 +30,7 @@
 # vim:set noet sts=4 sw=4 ts=4 tw=76:
 
 
-while sleep 1
+while sleep 2
 do
 
 	# Main-Functions
