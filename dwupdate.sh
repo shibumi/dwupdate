@@ -51,8 +51,8 @@ do
 	ram_capacity=$(free -h | awk '/Mem/{ print $2 }')
 	ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
 	cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
-	date=$(date -u -I)
-	datetime=$(date -u '+%I:%M %p')
+	date=$(date -I)
+	datetime=$(date '+%I:%M %p')
 	output=""
 
 	# Disk usage
