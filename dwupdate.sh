@@ -20,7 +20,7 @@
 #
 #======================================================================
 # Author: Christian Rebischke
-# Email : echo Q2hyaXMuUmViaXNjaGtlQGdtYWlsLmNvbQo= | base64 -d
+# Email : Chris.Rebischke@archlinux.org
 # Github: www.github.com/Shibumi
 #
 #
@@ -72,12 +72,12 @@ do
 
 	if [[ $temp -ge 45 ]] && [[ $temp -le 49 ]]
 	then
-		output+="T: $temp%"
+		output+="T: ${temp}C"
 	elif [[ $temp -gt 49 ]]
 	then
-		output+="T: $temp%"
+		output+="T: ${temp}C"
 	else
-		output+="T: $temp%"
+		output+="T: ${temp}C"
 	fi
 
 		# Wifi
