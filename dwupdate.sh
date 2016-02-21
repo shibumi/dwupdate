@@ -94,7 +94,7 @@ do
 
 	if [[ $wifi_state == "routable" ]]
 	then
-		output+="W: (IP:$wifi_address DNS:$wifi_dns)"
+		output+="W: (IP:$wifi_address : DNS:$wifi_dns)"
 
 	else
 		output+="W: Down"
@@ -104,7 +104,7 @@ do
 
 	if [[ $ether_state == "routable" ]]
 	then
-		output+="E: (IP:$ether_address DNS:$ether_dns)"
+		output+="E: (IP:$ether_address : DNS:$ether_dns)"
 	else
 		output+="E: Down"
 	fi
@@ -115,12 +115,12 @@ do
 	then
 		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
 		then
-			output+="B: v $bat_perc : $bat_remaining"
+			output+="B: (v $bat_perc : $bat_remaining)"
 		elif [[ $bat_perc -ge 20 ]]
 		then
-			output+="B: v $bat_perc : $bat_remaining"
+			output+="B: (v $bat_perc : $bat_remaining)"
 		else
-			output+="B: v $bat_perc : $bat_remaining"
+			output+="B: (v $bat_perc : $bat_remaining)"
 		fi
 	else
 		output+="B: ^ $bat_perc"
