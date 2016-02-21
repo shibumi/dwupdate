@@ -3,7 +3,7 @@ a simple colourized statusbar for DWM
 
 ## Dependencies
 
-* lm_sensors
+* acpi
 * gawk
 * sysstat
-* ip
+* systemd
