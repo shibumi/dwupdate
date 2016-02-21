@@ -7,3 +7,4 @@ a simple colourized statusbar for DWM
 * gawk
 * sysstat
 * systemd
+* pamixer
