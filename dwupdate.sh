@@ -34,7 +34,7 @@ ether="enp0s25"
 wifi="wlp3s0"
 
 
-while true
+while sleep 2
 do
 
 	# Main-Functions
@@ -53,7 +53,7 @@ do
 	ether_address=$(echo "$ether_main" | awk '/^\s+Address/{ print $2 }')
 	ether_dns=$(echo "$ether_main" | awk '/DNS/{ print $2 }')
 	bat_state=$(echo $acpi_b_main | awk '{print $3}')
-	bat_perc=$(echo $acpi_b_main | awk '{print $4}')
+	bat_perc=$(echo $acpi_b_main | awk '{printf "%d", $4}')
     bat_remaining=$(echo $acpi_b_main | awk '{print $5}')
 	sound_state=$(pamixer --get-mute)
 	sound_perc=$(pamixer --get-volume)
@@ -111,16 +111,16 @@ do
 
 	# Battery
 
-	if [[ $bat_state == "Discharging" ]]
+	if [[ $bat_state == "Discharging," ]]
 	then
 		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
 		then
-			output+="B: v $bat_perc"
+			output+="B: v $bat_perc : $bat_remaining"
 		elif [[ $bat_perc -ge 20 ]]
 		then
-			output+="B: v $bat_perc"
+			output+="B: v $bat_perc : $bat_remaining"
 		else
-			output+="B: v $bat_perc"
+			output+="B: v $bat_perc : $bat_remaining"
 		fi
 	else
 		output+="B: ^ $bat_perc"
