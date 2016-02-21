@@ -30,23 +30,33 @@
 # vim:set noet sts=4 sw=4 ts=4 tw=76:
 
 
-while sleep 2
+ether="enp0s25"
+wifi="wlp3s0"
+
+
+while true
 do
 
 	# Main-Functions
 	disk_main=$(df -h | grep "root")
+    acpi_b_main=$(acpi -b)
+    wifi_main=$(networkctl status $wifi)
+    ether_main=$(networkctl status $ether)
 	disk_perc=$(echo $disk_main | awk '{ printf "%0.f", $5 }')
 	disk_size=$(echo $disk_main | awk '{ print $2 }')
 	disk_use=$(echo $disk_main  | awk '{ print $3 }')
-	temp=$(sensors | grep "Core 0:" | awk '{ printf "%.0f", $3 }')
-	wifi_state=$(ip addr | grep 'wlp2s0' | head -1 | awk '{ print $9 }')
-	wifi_name=$(netctl list | awk '/*/{ print $2 }')
-	wifi_bitrate=$(iwconfig wlp2s0| grep -o "[0-9.]* Mb/s")
-	ether_state=$(ip addr | grep 'enp8s0' | head -1 | awk '{ print $9 }')
-	bat_state=$(cat /sys/class/power_supply/BAT1/status)
-	bat_perc=$(cat /sys/class/power_supply/BAT1/capacity)
-	sound_state=$(amixer get Master -M | grep -o "\(\[on\]\)\|\(\[off\]\)")
-	sound_perc=$(amixer get Master -M | grep -oE "[[:digit:]]*%")
+	temp=$(acpi -t | awk '{printf "%d", $4}')
+	wifi_state=$(echo "$wifi_main" | awk '/State/{ print $2 }')
+	wifi_address=$(echo "$wifi_main" | awk '/^\s+Address/{ print $2 }')
+	wifi_dns=$(echo "$wifi_main" | awk '/DNS/{ print $2 }')
+	ether_state=$(echo "$ether_main" | awk '/State/{ print $2 }')
+	ether_address=$(echo "$ether_main" | awk '/^\s+Address/{ print $2 }')
+	ether_dns=$(echo "$ether_main" | awk '/DNS/{ print $2 }')
+	bat_state=$(echo $acpi_b_main | awk '{print $3}')
+	bat_perc=$(echo $acpi_b_main | awk '{print $4}')
+    bat_remaining=$(echo $acpi_b_main | awk '{print $5}')
+	sound_state=$(pamixer --get-mute)
+	sound_perc=$(pamixer --get-volume)
 	ram_usage=$(free -h | awk '/Mem/{print $3 }')
 	ram_capacity=$(free -h | awk '/Mem/{ print $2 }')
 	ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
@@ -70,21 +80,21 @@ do
 
 	# Temperature
 
-	if [[ $temp -ge 45 ]] && [[ $temp -le 49 ]]
-	then
-		output+="T: ${temp}C"
-	elif [[ $temp -gt 49 ]]
+	if [[ $temp -ge 86 ]]
 	then
 		output+="T: ${temp}C"
+	elif [[ $temp -gt 65 ]]
+	then
+		output+="T: ${temp}C"
 	else
 		output+="T: ${temp}C"
 	fi
 
-		# Wifi
+	# Wifi
 
-	if [[ $wifi_state == "UP" ]]
+	if [[ $wifi_state == "routable" ]]
 	then
-		output+="W: ($wifi_name:$wifi_bitrate)"
+		output+="W: (IP:$wifi_address DNS:$wifi_dns)"
 
 	else
 		output+="W: Down"
@@ -92,9 +102,9 @@ do
 
 	# Ethernet
 
-	if [[ $ether_state == "UP" ]]
+	if [[ $ether_state == "routable" ]]
 	then
-		output+="E: Up"
+		output+="E: (IP:$ether_address DNS:$ether_dns)"
 	else
 		output+="E: Down"
 	fi
@@ -105,20 +115,20 @@ do
 	then
 		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
 		then
-			output+="B: v $bat_perc%"
+			output+="B: v $bat_perc"
 		elif [[ $bat_perc -ge 20 ]]
 		then
-			output+="B: v $bat_perc%"
+			output+="B: v $bat_perc"
 		else
-			output+="B: v $bat_perc%"
+			output+="B: v $bat_perc"
 		fi
 	else
-		output+="B: ^ $bat_perc%"
+		output+="B: ^ $bat_perc"
 	fi
 
 	# Sound
 
-	if [[ $sound_state == "[on]" ]]
+	if [[ $sound_state == "false" ]]
 	then
 		output+="S: $sound_perc"
 	else
