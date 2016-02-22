@@ -34,134 +34,129 @@ ether="enp0s25"
 wifi="wlp3s0"
 
 
-while sleep 2
-do
+# Main-Functions
+disk_main=$(df -h | grep "root")
+acpi_b_main=$(acpi -b)
+wifi_main=$(networkctl status $wifi)
+ether_main=$(networkctl status $ether)
+disk_perc=$(echo $disk_main | awk '{ printf "%0.f", $5 }')
+disk_size=$(echo $disk_main | awk '{ print $2 }')
+disk_use=$(echo $disk_main  | awk '{ print $3 }')
+temp=$(acpi -t | awk '{printf "%d", $4}')
+wifi_state=$(echo "$wifi_main" | awk '/State/{ print $2 }')
+wifi_address=$(echo "$wifi_main" | awk '/^\s+Address/{ print $2 }')
+wifi_dns=$(echo "$wifi_main" | awk '/DNS/{ print $2 }')
+ether_state=$(echo "$ether_main" | awk '/State/{ print $2 }')
+ether_address=$(echo "$ether_main" | awk '/^\s+Address/{ print $2 }')
+ether_dns=$(echo "$ether_main" | awk '/DNS/{ print $2 }')
+bat_state=$(echo $acpi_b_main | awk '{print $3}')
+bat_perc=$(echo $acpi_b_main | awk '{printf "%d", $4}')
+bat_remaining=$(echo $acpi_b_main | awk '{print $5}')
+sound_state=$(pamixer --get-mute)
+sound_perc=$(pamixer --get-volume)
+ram_usage=$(free -h | awk '/Mem/{print $3 }')
+ram_capacity=$(free -h | awk '/Mem/{ print $2 }')
+ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
+cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
+date=$(date -I)
+datetime=$(date '+%I:%M %p')
+output=""
 
-	# Main-Functions
-	disk_main=$(df -h | grep "root")
-    acpi_b_main=$(acpi -b)
-    wifi_main=$(networkctl status $wifi)
-    ether_main=$(networkctl status $ether)
-	disk_perc=$(echo $disk_main | awk '{ printf "%0.f", $5 }')
-	disk_size=$(echo $disk_main | awk '{ print $2 }')
-	disk_use=$(echo $disk_main  | awk '{ print $3 }')
-	temp=$(acpi -t | awk '{printf "%d", $4}')
-	wifi_state=$(echo "$wifi_main" | awk '/State/{ print $2 }')
-	wifi_address=$(echo "$wifi_main" | awk '/^\s+Address/{ print $2 }')
-	wifi_dns=$(echo "$wifi_main" | awk '/DNS/{ print $2 }')
-	ether_state=$(echo "$ether_main" | awk '/State/{ print $2 }')
-	ether_address=$(echo "$ether_main" | awk '/^\s+Address/{ print $2 }')
-	ether_dns=$(echo "$ether_main" | awk '/DNS/{ print $2 }')
-	bat_state=$(echo $acpi_b_main | awk '{print $3}')
-	bat_perc=$(echo $acpi_b_main | awk '{printf "%d", $4}')
-    bat_remaining=$(echo $acpi_b_main | awk '{print $5}')
-	sound_state=$(pamixer --get-mute)
-	sound_perc=$(pamixer --get-volume)
-	ram_usage=$(free -h | awk '/Mem/{print $3 }')
-	ram_capacity=$(free -h | awk '/Mem/{ print $2 }')
-	ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
-	cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
-	date=$(date -I)
-	datetime=$(date '+%I:%M %p')
-	output=""
+# Disk usage
 
-	# Disk usage
-
-	if [[ $disk_perc -ge 90 ]]
-	then
-		output+="D: $disk_use / $disk_size"
-	elif [[ $disk_perc -ge 70 ]]
-	then
-		output+="D: $disk_use / $disk_size"
-	else
-		output+="D: $disk_use / $disk_size"
-	fi
+if [[ $disk_perc -ge 90 ]]
+then
+    output+="D: $disk_use / $disk_size"
+elif [[ $disk_perc -ge 70 ]]
+then
+    output+="D: $disk_use / $disk_size"
+else
+    output+="D: $disk_use / $disk_size"
+fi
 
 
-	# Temperature
+# Temperature
 
-	if [[ $temp -ge 86 ]]
-	then
-		output+="T: ${temp}C"
-	elif [[ $temp -gt 65 ]]
-	then
-		output+="T: ${temp}C"
-	else
-		output+="T: ${temp}C"
-	fi
+if [[ $temp -ge 86 ]]
+then
+    output+="T: ${temp}C"
+elif [[ $temp -gt 65 ]]
+then
+    output+="T: ${temp}C"
+else
+    output+="T: ${temp}C"
+fi
 
-	# Wifi
+# Wifi
 
-	if [[ $wifi_state == "routable" ]]
-	then
-		output+="W: (IP:$wifi_address : DNS:$wifi_dns)"
+if [[ $wifi_state == "routable" ]]
+then
+    output+="W: (IP:$wifi_address : DNS:$wifi_dns)"
 
-	else
-		output+="W: Down"
-	fi
+else
+    output+="W: Down"
+fi
 
-	# Ethernet
+# Ethernet
 
-	if [[ $ether_state == "routable" ]]
-	then
-		output+="E: (IP:$ether_address : DNS:$ether_dns)"
-	else
-		output+="E: Down"
-	fi
+if [[ $ether_state == "routable" ]]
+then
+    output+="E: (IP:$ether_address : DNS:$ether_dns)"
+else
+    output+="E: Down"
+fi
 
-	# Battery
+# Battery
 
-	if [[ $bat_state == "Discharging," ]]
-	then
-		if [[ $bat_perc -ge 50 ]] && [[ $bat_perc -le 100 ]]
-		then
-			output+="B: (v $bat_perc : $bat_remaining)"
-		elif [[ $bat_perc -ge 20 ]]
-		then
-			output+="B: (v $bat_perc : $bat_remaining)"
-		else
-			output+="B: (v $bat_perc : $bat_remaining)"
-		fi
-	else
-		output+="B: ^ $bat_perc"
-	fi
+if [[ $bat_state == "Discharging," ]]
+then
+    if [[ $bat_perc -ge 20 ]] 
+    then
+        output+="B: (v $bat_perc : $bat_remaining)"
+    elif [[ $bat_perc -ge 10 ]]
+    then
+        output+="B: (v $bat_perc : $bat_remaining)"
+    else
+        output+="B: (v $bat_perc : $bat_remaining)"
+    fi
+else
+    output+="B: ^ $bat_perc"
+fi
 
-	# Sound
+# Sound
 
-	if [[ $sound_state == "false" ]]
-	then
-		output+="S: $sound_perc"
-	else
-		output+="S: $sound_perc"
-	fi
+if [[ $sound_state == "false" ]]
+then
+    output+="S: $sound_perc"
+else
+    output+="S: $sound_perc"
+fi
 
-	# RAM
+# RAM
 
-	if [[ $ram_perc -ge 90 ]]
-	then
-		output+="RAM: $ram_usage / $ram_capacity"
-	elif [[ $ram_perc -ge 50 ]]
-	then
-		output+="RAM: $ram_usage / $ram_capacity"
-	else
-		output+="RAM: $ram_usage / $ram_capacity"
-	fi
+if [[ $ram_perc -ge 90 ]]
+then
+    output+="RAM: $ram_usage / $ram_capacity"
+elif [[ $ram_perc -ge 50 ]]
+then
+    output+="RAM: $ram_usage / $ram_capacity"
+else
+    output+="RAM: $ram_usage / $ram_capacity"
+fi
 
-	# CPU
+# CPU
 
-	if [[ $cpu_usage -ge 90 ]]
-	then
-		output+="CPU: $cpu_usage%"
-	elif [[ $cpu_usage -ge 50 ]]
-	then
-		output+="CPU: $cpu_usage%"
-	else
-		output+="CPU: $cpu_usage%"
-	fi
+if [[ $cpu_usage -ge 90 ]]
+then
+    output+="CPU: $cpu_usage%"
+elif [[ $cpu_usage -ge 50 ]]
+then
+    output+="CPU: $cpu_usage%"
+else
+    output+="CPU: $cpu_usage%"
+fi
 
-	# Date/Time
+# Date/Time
 
-	output+="$date $datetime"
-	xsetroot -name "$output"
-	output=""
-done
+output+="$date $datetime"
+xsetroot -name "$output"

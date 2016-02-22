@@ -1,0 +1,10 @@
+[Unit]
+Description=Run dwupdate.service every 2 seconds
+
+[Timer]
+OnActiveSec=2s
+OnUnitActiveSec=2s
+Unit=dwupdate.service
+
+[Install]
+WantedBy=timers.target
