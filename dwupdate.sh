@@ -112,12 +112,12 @@ if [[ $bat_state == "Discharging," ]]
 then
     if [[ $bat_perc -ge 20 ]] 
     then
-        output+="B: (v $bat_perc : $bat_remaining)"
+        output+="B: (v $bat_perc% : $bat_remaining)"
     elif [[ $bat_perc -ge 10 ]]
     then
-        output+="B: (v $bat_perc : $bat_remaining)"
+        output+="B: (v $bat_perc% : $bat_remaining)"
     else
-        output+="B: (v $bat_perc : $bat_remaining)"
+        output+="B: (v $bat_perc% : $bat_remaining)"
     fi
 else
     output+="B: ^ $bat_perc"
