@@ -120,7 +120,7 @@ then
         output+="B: (v $bat_perc% : $bat_remaining)"
     fi
 else
-    output+="B: ^ $bat_perc"
+    output+="B: ^ $bat_perc%"
 fi
 
 # Sound
