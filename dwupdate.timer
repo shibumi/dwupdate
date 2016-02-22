@@ -2,7 +2,7 @@
 Description=Run dwupdate.service every 2 seconds
 
 [Timer]
-OnActiveSec=2s
+OnActiveSec=0
 OnUnitActiveSec=2s
 Unit=dwupdate.service
 
