@@ -118,6 +118,7 @@ then
         output+="B: (v $bat_perc% : $bat_remaining)"
     else
         output+="B: (v $bat_perc% : $bat_remaining)"
+        notify-send -u critical "Battery" "Very low"
     fi
 else
     output+="B: ^ $bat_perc%"

@@ -8,3 +8,4 @@ a simple colourized statusbar for DWM
 * sysstat
 * systemd
 * pamixer
+* libnotify
