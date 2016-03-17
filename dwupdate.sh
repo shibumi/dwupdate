@@ -35,6 +35,8 @@ wifi="wlp3s0"
 
 
 # Main-Functions
+machines=($(machinectl list-images --no-legend | awk '{ print $1 }'))
+machines_up=($(machinectl list --no-legend | awk '{ print $1 }'))
 disk_main=$(df -h | grep "root")
 acpi_b_main=$(acpi -b)
 wifi_main=$(networkctl status $wifi)
@@ -156,6 +158,29 @@ then
 else
     output+="CPU: $cpu_usage%"
 fi
+
+# VM's containers etc
+
+containsElement () {
+    local e
+    for e in "${@:2}" 
+    do 
+        [[ "$e" == "$1" ]] && return 0
+    done
+    return 1
+}
+
+output+="M:"
+for i in "${machines[@]}"
+do
+    if containsElement "$i" "${machines_up[@]}"
+    then
+        output+="$i"
+    else
+        output+="$i"
+    fi
+done
+
 
 # Date/Time
 
