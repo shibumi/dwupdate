@@ -1,5 +1,21 @@
 # dwupdate
-a simple colourized statusbar for DWM
+
+## What is dwupdate?
+
+dwupdate is a simple, colourful and hackable statusbar for DWM.
+It can display the following information:
+
+* Disk usage
+* CPU temperature
+* Wifi state + IP + DNS IP
+* Ethernet state + IP + DNS IP
+* Battery state
+* Sound state
+* RAM usage
+* CPU usage
+* Systemd-nspawn container states
+* Date 
+* time
 
 ## Dependencies
 
@@ -9,3 +25,7 @@ a simple colourized statusbar for DWM
 * systemd
 * pamixer
 * libnotify
+
+## Screenshots
+
+![screenshot](https://paste.archlinux.de/7fd/)
