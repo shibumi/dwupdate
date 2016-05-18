@@ -2,8 +2,7 @@
 #
 # dwupdate.sh - statusbar updater with colours via statuscolor
 #
-# Copyright (c) 2015 by Christian Rebischke
-# <echo Q2hyaXMuUmViaXNjaGtlQGdtYWlsLmNvbQo= | base64 -d>
+# Copyright (c) 2015 by Christian Rebischke <chris.rebischke@archlinux.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -96,19 +95,18 @@ fi
 
 if [[ $wifi_state == "routable" ]]
 then
-    output+="W: (IP:$wifi_address : DNS:$wifi_dns)"
-
+    output+="$wifi: (IP:$wifi_address : DNS:$wifi_dns)"
 else
-    output+="W: Down"
+    output+="$wifi: Down"
 fi
 
 # Ethernet
 
 if [[ $ether_state == "routable" ]]
 then
-    output+="E: (IP:$ether_address : DNS:$ether_dns)"
+    output+="$ether: (IP:$ether_address : DNS:$ether_dns)"
 else
-    output+="E: Down"
+    output+="$ether: Down"
 fi
 
 # Battery
@@ -186,27 +184,26 @@ done
 
 # Firewalld
 
-output+="^BZ:"
+output+="Z:"
 for i in "$active_zones"
 do
-    output+="^C$i"
+    output+="$i"
 done
 
-output+="^BF:"
+output+="F:"
 if [[ $lockdown == "yes" ]]
 then
-    output+="^Clockdown"
+    output+="lockdown"
 else
-    output+="^Dlockdown"
+    output+="lockdown"
 fi
 
 if [[ $panic == "yes" ]]
 then
-    output+="^Cpanic"
+    output+="panic"
 else
-    output+="^Dpanic"
+    output+="panic"
 fi
-
 
 # Date/Time
 
