@@ -62,6 +62,9 @@ ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
 cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
 date=$(date -I)
 datetime=$(date '+%I:%M %p')
+active_zones=$(firewall-cmd --get-active-zones | grep -o "^[A-Za-z]*")
+lockdown=$(firewall-cmd --query-lockdown)
+panic=$(firewall-cmd --query-panic)
 output=""
 
 # Disk usage
@@ -180,6 +183,29 @@ do
         output+="$i"
     fi
 done
+
+# Firewalld
+
+output+="^BZ:"
+for i in "$active_zones"
+do
+    output+="^C$i"
+done
+
+output+="^BF:"
+if [[ $lockdown == "yes" ]]
+then
+    output+="^Clockdown"
+else
+    output+="^Dlockdown"
+fi
+
+if [[ $panic == "yes" ]]
+then
+    output+="^Cpanic"
+else
+    output+="^Dpanic"
+fi
 
 
 # Date/Time
