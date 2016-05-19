@@ -61,9 +61,9 @@ ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
 cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
 date=$(date -I)
 datetime=$(date '+%I:%M %p')
-active_zones=$(firewall-cmd --get-active-zones | grep -o "^[A-Za-z]*")
-lockdown=$(firewall-cmd --query-lockdown)
-panic=$(firewall-cmd --query-panic)
+active_zones=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1.zone getActiveZones | cut -d" " -f3 | tr -d \")
+lockdown=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1.policies queryLockdown)
+panic=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1 queryPanicMode)
 output=""
 
 # Disk usage
