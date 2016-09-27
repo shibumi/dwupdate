@@ -31,7 +31,7 @@
 
 ether="enp0s25"
 wifi="wlp3s0"
-
+zones="block\|dmz\|drop\|external\|home\|internal\|public\|trusted"
 
 # Main-Functions
 machines=($(machinectl list-images --no-legend | awk '{ print $1 }'))
@@ -61,7 +61,7 @@ ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
 cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
 date=$(date -I)
 datetime=$(date '+%I:%M %p')
-active_zones=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1.zone getActiveZones | cut -d" " -f3 | tr -d \")
+active_zones=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1.zone getActiveZones | grep -o $zones | tr \\n ' ')
 lockdown=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1.policies queryLockdown)
 panic=$(busctl call org.fedoraproject.FirewallD1 /org/fedoraproject/FirewallD1 org.fedoraproject.FirewallD1 queryPanicMode)
 output=""
@@ -191,16 +191,16 @@ do
 done
 
 output+="F:"
-if [[ $lockdown == "yes" ]]
+if [[ $lockdown == "b true" ]]
 then
     output+="lockdown"
 else
     output+="lockdown"
 fi
 
-if [[ $panic == "yes" ]]
+if [[ $panic == "b true" ]]
 then
-    output+="panic"
+    output+="panic"
 else
     output+="panic"
 fi
