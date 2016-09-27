@@ -16,8 +16,8 @@ It can display the following information:
 * Systemd-nspawn container states
 * Date 
 * time
-* active firewalld zones
-* firewalld lockdown and panic status
+* active firewalld zones (checkout branch firewalld_support)
+* firewalld lockdown and panic status (checkout branch firewalld_support)
 
 ## Dependencies
 
@@ -27,7 +27,7 @@ It can display the following information:
 * systemd 
 * pamixer
 * libnotify
-* firewalld
+* firewalld (checkout branch firewalld_support)
 
 ## Screenshots
 
