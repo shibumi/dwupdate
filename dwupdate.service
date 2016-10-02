@@ -4,7 +4,6 @@ Description=DWM statusbar
 [Service]
 Type=simple
 ExecStart=/usr/bin/dwupdate
-ExecStart=/usr/bin/dwupdate-audit
 
 [Install]
 WantedBy=graphical.target
