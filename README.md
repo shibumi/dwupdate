@@ -18,6 +18,7 @@ It can display the following information:
 * time
 * active firewalld zones (checkout branch firewalld_support)
 * firewalld lockdown and panic status (checkout branch firewalld_support)
+* vulnerable/upgradeable packages (Arch Linux only)
 
 ## Dependencies
 
@@ -28,6 +29,7 @@ It can display the following information:
 * pamixer
 * libnotify
 * firewalld (checkout branch firewalld_support)
+* arch-audit
 
 ## Screenshots
 
