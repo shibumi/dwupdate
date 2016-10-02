@@ -61,6 +61,8 @@ do
     ram_capacity=$(free -h | awk '/Mem/{ print $2 }')
     ram_perc=$(free | awk '/Mem/{print $3/$2 * 100.0}' | cut -d"." -f1)
     cpu_usage=$(mpstat 1 1 | awk '/Average/{ printf "%.0f", 100-$NF }')
+    vulnerable=$(cat /tmp/arch-audit/vulnerable | wc -l)
+    upgradeable=$(cat /tmp/arch-audit/upgradeable | wc -l)
     date=$(date -I)
     datetime=$(date '+%I:%M %p')
     output=""
@@ -181,6 +183,23 @@ do
         fi
     done
 
+    # arch-audit
+
+    output+="P:"
+    if [[ $vulnerable -ge 1 ]]
+    then
+        output+="vulnerable: $vulnerable"
+        if [[ upgradeable -ge 1 ]]
+        then
+            output+="upgradeable: $upgradeable"
+        else
+            output+="upgradeable: $upgradeable"
+        fi
+    else
+        output+="vulnerable: $vulnerable"
+        output+="upgradeable: $upgradeable"
+    fi
+        
     # Date/Time
 
     output+="$date $datetime"
