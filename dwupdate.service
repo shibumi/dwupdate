@@ -1,5 +1,6 @@
 [Unit]
 Description=DWM statusbar
+After=dwupdate-audit.service
 
 [Service]
 Type=simple

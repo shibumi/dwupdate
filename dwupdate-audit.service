@@ -1,11 +1,11 @@
 [Unit]
 Description=dwupdate support script
 After=network-online.target
-After=dwupdate.service
+Before=dwupdate.service
 
 [Service]
 Type=simple
 ExecStart=/usr/bin/dwupdate-audit
 
 [Install]
-WantedBy=graphical.target
+WantedBy=multi-user.target
