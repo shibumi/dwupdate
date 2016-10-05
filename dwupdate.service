@@ -7,4 +7,4 @@ Type=simple
 ExecStart=/usr/bin/dwupdate
 
 [Install]
-WantedBy=graphical.target
+WantedBy=default.target
